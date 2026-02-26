@@ -1,0 +1,29 @@
+# cmr-backend_v2 Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2026-02-26
+
+## Active Technologies
+
+- Python 3.11+ + FastAPI, uvicorn, supabase, modal, pyjwt, cryptography, sqlalchemy, asyncpg, pydantic, pydantic-settings, httpx, python-dotenv (001-starter-application)
+
+## Project Structure
+
+```text
+src/
+tests/
+```
+
+## Commands
+
+cd src && pytest && ruff check .
+
+## Code Style
+
+Python 3.11+: Follow standard conventions
+
+## Recent Changes
+
+- 001-starter-application: Added Python 3.11+ + FastAPI, uvicorn, supabase, modal, pyjwt, cryptography, sqlalchemy, asyncpg, pydantic, pydantic-settings, httpx, python-dotenv
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->
