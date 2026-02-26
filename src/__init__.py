@@ -1,0 +1,1 @@
+"""CMR Backend - Starter application."""

@@ -23,10 +23,10 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project directory structure per plan: `src/api/`, `src/config/`, `src/deployment/`, `src/middleware/`, `src/models/`, `src/models/jobs/`, `src/services/`, `src/services/job_queue/`, `src/utils/`, `tests/`, `scripts/`, `docs/db/migrations/`
-- [ ] T002 Create `pyproject.toml` with uv, dependencies: fastapi, uvicorn, supabase, modal, pyjwt, cryptography, sqlalchemy, asyncpg, pydantic, pydantic-settings, httpx, python-dotenv
-- [ ] T003 Create `.env.example` with ENVIRONMENT, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, SUPABASE_SECRET_KEY, TRANSACTION_POOLER_URL, JOB_STUCK_TIMEOUT_MINUTES, MODAL_APP_NAME
-- [ ] T004 [P] Configure ruff in `pyproject.toml` for linting and formatting
+- [x] T001 Create project directory structure per plan: `src/api/`, `src/config/`, `src/deployment/`, `src/middleware/`, `src/models/`, `src/models/jobs/`, `src/services/`, `src/services/job_queue/`, `src/utils/`, `tests/`, `scripts/`, `docs/db/migrations/`
+- [x] T002 Create `pyproject.toml` with uv, dependencies: fastapi, uvicorn, supabase, modal, pyjwt, cryptography, sqlalchemy, asyncpg, pydantic, pydantic-settings, httpx, python-dotenv
+- [x] T003 Create `.env.example` with ENVIRONMENT, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, SUPABASE_SECRET_KEY, TRANSACTION_POOLER_URL, JOB_STUCK_TIMEOUT_MINUTES, MODAL_APP_NAME
+- [x] T004 [P] Configure ruff in `pyproject.toml` for linting and formatting
 
 ---
 
@@ -36,17 +36,17 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 [US4] Create idempotent migration script `scripts/migrate.py` creating `jobs` table (per data-model.md), PGMQ extension, `job_queue` queue
-- [ ] T006 Create `src/models/config.py` with Settings (pydantic-settings), load_settings(), JOB_STUCK_TIMEOUT_MINUTES (default 15)
-- [ ] T007 Create `src/config/supabase.py` with get_supabase_client() factory
-- [ ] T008 Create `src/config/database.py` with transaction pooler, AsyncSession, check_transaction_pooler_health()
-- [ ] T009 Create `src/utils/logging.py` with get_logger(), setup_logging(); logging MUST be structured (JSON or key-value) and include request_id when available
-- [ ] T010 Create `src/api/dependencies.py` with get_settings(), get_validated_jwt_user() (JWKS, no company lookup)
-- [ ] T011 Create `src/middleware/` with CORS, metrics, rate limiter, request ID (X-Request-ID) middleware
-- [ ] T012 Create `src/models/common.py` with ErrorResponse model (MUST include request_id for correlation)
-- [ ] T013 Create `src/models/responses.py` with ValidatedJWTUser (user_id only)
-- [ ] T014 Create `src/api/main.py` with FastAPI app, lifespan, middleware order, global error handler that MUST pass request_id into ErrorResponse
-- [ ] T015 Create `scripts/dev.py` to run uvicorn with `src.api.main:app` on port 8000 with reload
+- [x] T005 [US4] Create idempotent migration script `scripts/migrate.py` creating `jobs` table (per data-model.md), PGMQ extension, `job_queue` queue
+- [x] T006 Create `src/models/config.py` with Settings (pydantic-settings), load_settings(), JOB_STUCK_TIMEOUT_MINUTES (default 15)
+- [x] T007 Create `src/config/supabase.py` with get_supabase_client() factory
+- [x] T008 Create `src/config/database.py` with transaction pooler, AsyncSession, check_transaction_pooler_health()
+- [x] T009 Create `src/utils/logging.py` with get_logger(), setup_logging(); logging MUST be structured (JSON or key-value) and include request_id when available
+- [x] T010 Create `src/api/dependencies.py` with get_settings(), get_validated_jwt_user() (JWKS, no company lookup)
+- [x] T011 Create `src/middleware/` with CORS, metrics, rate limiter, request ID (X-Request-ID) middleware
+- [x] T012 Create `src/models/common.py` with ErrorResponse model (MUST include request_id for correlation)
+- [x] T013 Create `src/models/responses.py` with ValidatedJWTUser (user_id only)
+- [x] T014 Create `src/api/main.py` with FastAPI app, lifespan, middleware order, global error handler that MUST pass request_id into ErrorResponse
+- [x] T015 Create `scripts/dev.py` to run uvicorn with `src.api.main:app` on port 8000 with reload
 
 **Checkpoint**: Foundation ready — migration runnable, config loaded, auth and middleware in place
 
@@ -60,8 +60,8 @@
 
 ### Implementation for User Story 1
 
-- [ ] T016 [P] [US1] Create `src/api/routes/health.py` with GET /health (liveness) and GET /health/db (DB connectivity via check_transaction_pooler_health; return 503 when DB unreachable)
-- [ ] T017 [US1] Register health router in `src/api/main.py`; ensure /docs available
+- [x] T016 [P] [US1] Create `src/api/routes/health.py` with GET /health (liveness) and GET /health/db (DB connectivity via check_transaction_pooler_health; return 503 when DB unreachable)
+- [x] T017 [US1] Register health router in `src/api/main.py`; ensure /docs available
 
 **Checkpoint**: User Story 1 complete — health endpoints return 200 when deps healthy
 
@@ -75,15 +75,15 @@
 
 ### Implementation for User Story 2
 
-- [ ] T018 [P] [US2] Create `src/models/jobs/job_status.py` with JobStatus, JobType enums (include sample_task)
-- [ ] T019 [P] [US2] Create `src/models/jobs/job.py` with JobCreateRequest, JobResponse, JobListResponse per contracts
-- [ ] T020 [US2] Create `src/services/job_queue/database.py` with create_job, get_job_by_id, update_job_status, list_jobs (user-scoped), store_error_info, store_data_references
-- [ ] T021 [US2] Create `src/services/job_queue/queue.py` with PGMQ send_job_message, read_job_messages, delete_job_message
-- [ ] T022 [US2] Create `src/services/job_queue/spawner.py` with spawn_job() routing sample_task to Modal
-- [ ] T023 [US2] Create `src/services/job_queue/service.py` with JobQueueService.create_job, process_job (sample_task logic), validate_job_parameters (no duplicate check for sample_task)
-- [ ] T024 [US2] Create `src/deployment/modal_workers.py` with process_sample_job worker (job_id, job_type, user_id, job_parameters); _process_job helper
-- [ ] T025 [US2] Create `src/api/routes/jobs/router.py` with POST /jobs, GET /jobs/{job_id}, GET /jobs (filters: status, job_type, limit, offset); Depends(get_validated_jwt_user)
-- [ ] T026 [US2] Register jobs router in `src/api/main.py`; add get_job_queue_service in dependencies
+- [x] T018 [P] [US2] Create `src/models/jobs/job_status.py` with JobStatus, JobType enums (include sample_task)
+- [x] T019 [P] [US2] Create `src/models/jobs/job.py` with JobCreateRequest, JobResponse, JobListResponse per contracts
+- [x] T020 [US2] Create `src/services/job_queue/database.py` with create_job, get_job_by_id, update_job_status, list_jobs (user-scoped), store_error_info, store_data_references
+- [x] T021 [US2] Create `src/services/job_queue/queue.py` with PGMQ send_job_message, read_job_messages, delete_job_message
+- [x] T022 [US2] Create `src/services/job_queue/spawner.py` with spawn_job() routing sample_task to Modal
+- [x] T023 [US2] Create `src/services/job_queue/service.py` with JobQueueService.create_job, process_job (sample_task logic), validate_job_parameters (no duplicate check for sample_task)
+- [x] T024 [US2] Create `src/deployment/modal_workers.py` with process_sample_job worker (job_id, job_type, user_id, job_parameters); _process_job helper
+- [x] T025 [US2] Create `src/api/routes/jobs/router.py` with POST /jobs, GET /jobs/{job_id}, GET /jobs (filters: status, job_type, limit, offset); Depends(get_validated_jwt_user)
+- [x] T026 [US2] Register jobs router in `src/api/main.py`; add get_job_queue_service in dependencies
 
 **Checkpoint**: User Story 2 complete — jobs CRUD works; sample_task completes via Modal worker
 
@@ -97,8 +97,8 @@
 
 ### Implementation for User Story 3
 
-- [ ] T027 [US3] Add find_stuck_jobs, find_orphaned_jobs in `src/services/job_queue/database.py` using JOB_STUCK_TIMEOUT_MINUTES
-- [ ] T028 [US3] Add recover_orphaned_jobs scheduled function in `src/deployment/modal_workers.py` with Period(minutes=15); call recovery logic to mark jobs failed
+- [x] T027 [US3] Add find_stuck_jobs, find_orphaned_jobs in `src/services/job_queue/database.py` using JOB_STUCK_TIMEOUT_MINUTES
+- [x] T028 [US3] Add recover_orphaned_jobs scheduled function in `src/deployment/modal_workers.py` with Period(minutes=15); call recovery logic to mark jobs failed
 
 **Checkpoint**: User Story 3 complete — recovery worker runs every 15 min
 
@@ -108,12 +108,12 @@
 
 **Purpose**: Deployment and validation
 
-- [ ] T029 [P] Create `src/deployment/modal_app.py` with @asgi_app() wrapping FastAPI app for Modal
-- [ ] T030 [P] Create `src/deployment/deploy.py` (or pyproject script) for deploy_dev/deploy_prod
-- [ ] T031 [P] Add create_modal_secrets.sh or document Modal secrets setup
-- [ ] T032 [P] Create `docs/quickstart.md` (or README) with setup steps per specs/001-starter-application/quickstart.md
-- [ ] T033 [P] Add docs/conventions.md or README section referencing patterns from `_local/starter-kit/`; ensure developer guidance per constitution
-- [ ] T034 Run quickstart validation: clone, uv sync, migrate, dev, verify /health and /health/db
+- [x] T029 [P] Create `src/deployment/modal_app.py` with @asgi_app() wrapping FastAPI app for Modal
+- [x] T030 [P] Create `src/deployment/deploy.py` (or pyproject script) for deploy_dev/deploy_prod
+- [x] T031 [P] Add create_modal_secrets.sh or document Modal secrets setup
+- [x] T032 [P] Create `docs/quickstart.md` (or README) with setup steps per specs/001-starter-application/quickstart.md
+- [x] T033 [P] Add docs/conventions.md or README section referencing patterns from `_local/starter-kit/`; ensure developer guidance per constitution
+- [x] T034 Run quickstart validation: clone, uv sync, migrate, dev, verify /health and /health/db
 
 ---
 

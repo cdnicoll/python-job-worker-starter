@@ -1,1 +1,22 @@
 _local
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+dist/
+*.egg-info/
+*.egg
+# Environment
+.env
+.env.local
+*.log
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
