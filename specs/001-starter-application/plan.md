@@ -79,7 +79,7 @@ src/
 │       ├── job.py           # JobCreateRequest, JobResponse
 │       └── job_status.py     # JobStatus, JobType
 ├── services/
-│   ├── supabase/            # BaseDAO (no profile/company)
+│   ├── supabase/            # Optional: BaseDAO for future CRUD (not used by jobs starter)
 │   ├── job_queue/           # service, spawner, database, queue
 │   └── database/
 └── utils/                   # logging, rate_limiter
