@@ -1,9 +1,5 @@
 """Modal worker functions."""
 import os
-import sys
-
-# Ensure src is on path when running in Modal
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 import modal
 
@@ -11,8 +7,10 @@ import modal
 _env = os.environ.get("ENVIRONMENT", "develop")
 app = modal.App(f"Job-Worker-{_env}")
 
-# Base image for all workers
-image = modal.Image.debian_slim(python_version="3.11").pip_install(
+# Base image: pip deps + local src package (for import src.services...)
+image = (
+    modal.Image.debian_slim(python_version="3.11")
+    .pip_install(
     "fastapi",
     "uvicorn",
     "supabase",
@@ -24,6 +22,8 @@ image = modal.Image.debian_slim(python_version="3.11").pip_install(
     "pydantic-settings",
     "httpx",
     "python-dotenv",
+    )
+    .add_local_python_source("src")
 )
 
 # Modal secrets for DB/config (create via scripts/create_modal_secrets.sh)

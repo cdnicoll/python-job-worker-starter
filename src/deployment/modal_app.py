@@ -3,18 +3,22 @@ import modal
 
 app = modal.App("API-develop")
 
-image = modal.Image.debian_slim(python_version="3.11").pip_install(
-    "fastapi",
-    "uvicorn",
-    "supabase",
-    "pyjwt[crypto]",
-    "cryptography",
-    "sqlalchemy[asyncio]",
-    "asyncpg",
-    "pydantic",
-    "pydantic-settings",
-    "httpx",
-    "python-dotenv",
+image = (
+    modal.Image.debian_slim(python_version="3.11")
+    .pip_install(
+        "fastapi",
+        "uvicorn",
+        "supabase",
+        "pyjwt[crypto]",
+        "cryptography",
+        "sqlalchemy[asyncio]",
+        "asyncpg",
+        "pydantic",
+        "pydantic-settings",
+        "httpx",
+        "python-dotenv",
+    )
+    .add_local_python_source("src")
 )
 
 
