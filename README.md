@@ -1,4 +1,4 @@
-# CMR Backend
+# Python Job Worker Starter Project
 
 FastAPI backend with background jobs, Modal workers, and Supabase. A starter application for building async job-processing APIs.
 
@@ -26,7 +26,7 @@ All job endpoints require JWT authentication. Jobs are user-scoped (you only see
 
 ```bash
 git clone <repo-url>
-cd cmr-backend_v2
+cd python-job-worker-starter
 uv sync
 ```
 
