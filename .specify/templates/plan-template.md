@@ -31,7 +31,13 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Verify alignment with `.specify/memory/constitution.md`:
+
+- **Quick Start**: Setup path remains under 10 minutes; no new undocumented prerequisites
+- **REST API**: Health check and automatic API docs present or planned
+- **Cloud-Ready**: Stateless where possible; deployment path documented
+- **Observability**: Structured logging and request tracing (X-Request-ID) in place or planned
+- **Developer Guidance**: Patterns and rules documented; feature additions follow conventions
 
 ## Project Structure
 
