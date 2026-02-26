@@ -1,12 +1,17 @@
 #!/bin/bash
 # Create Modal secrets for deployment.
 # Prerequisites: modal setup, MODAL_PROJECT in .env (e.g. cody-99083)
-# If MODAL_PROJECT is set, add -e $MODAL_PROJECT to each modal command.
+# Workers require: supabase-credentials-{ENV}, app-config-{ENV}
 set -e
-echo "Create Modal secrets. If MODAL_PROJECT is in .env (e.g. cody-99083), use:"
-echo "  modal secret create -e \$MODAL_PROJECT supabase-credentials-develop SUPABASE_URL=... SUPABASE_SECRET_KEY=... TRANSACTION_POOLER_URL=..."
-echo "  modal secret create -e \$MODAL_PROJECT app-config-develop ENVIRONMENT=develop JOB_STUCK_TIMEOUT_MINUTES=15"
+PROJECT_ARG=""
+[ -n "$MODAL_PROJECT" ] && PROJECT_ARG="-e $MODAL_PROJECT"
+
+echo "Create Modal secrets. Source .env first: source .env  # or export vars"
 echo ""
-echo "Or without project (default workspace):"
-echo "  modal secret create supabase-credentials-develop SUPABASE_URL=... SUPABASE_SECRET_KEY=... TRANSACTION_POOLER_URL=..."
-echo "  modal secret create app-config-develop ENVIRONMENT=develop JOB_STUCK_TIMEOUT_MINUTES=15"
+echo "Develop (deploy_dev):"
+echo "  modal secret create $PROJECT_ARG supabase-credentials-develop SUPABASE_URL=\$SUPABASE_URL SUPABASE_PUBLISHABLE_KEY=\$SUPABASE_PUBLISHABLE_KEY SUPABASE_SECRET_KEY=\$SUPABASE_SECRET_KEY TRANSACTION_POOLER_URL=\$TRANSACTION_POOLER_URL"
+echo "  modal secret create $PROJECT_ARG app-config-develop ENVIRONMENT=develop JOB_STUCK_TIMEOUT_MINUTES=15"
+echo ""
+echo "Production (deploy_prod):"
+echo "  modal secret create $PROJECT_ARG supabase-credentials-production SUPABASE_URL=... SUPABASE_SECRET_KEY=... TRANSACTION_POOLER_URL=..."
+echo "  modal secret create $PROJECT_ARG app-config-production ENVIRONMENT=production JOB_STUCK_TIMEOUT_MINUTES=15"

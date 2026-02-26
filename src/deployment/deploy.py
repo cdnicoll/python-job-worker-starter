@@ -16,9 +16,13 @@ def main() -> None:
     if modal_project:
         deploy_args.extend(["-e", modal_project])
 
+    # Ensure ENVIRONMENT is set so modal_workers uses correct app name and secrets
+    deploy_env = os.environ.copy()
+    deploy_env["ENVIRONMENT"] = env
+
     if env in ("develop", "production"):
-        subprocess.run([*deploy_args, "src/deployment/modal_app.py"], check=True)
-        subprocess.run([*deploy_args, "src/deployment/modal_workers.py"], check=True)
+        subprocess.run([*deploy_args, "src/deployment/modal_app.py"], check=True, env=deploy_env)
+        subprocess.run([*deploy_args, "src/deployment/modal_workers.py"], check=True, env=deploy_env)
     else:
         print(f"Unknown environment: {env}")
         sys.exit(1)

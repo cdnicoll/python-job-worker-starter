@@ -7,10 +7,11 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 
 import modal
 
-# Create Modal app for workers
-app = modal.App("Job-Worker-develop")
+# Environment-driven app name (set by deploy script or .env)
+_env = os.environ.get("ENVIRONMENT", "develop")
+app = modal.App(f"Job-Worker-{_env}")
 
-# Default image
+# Base image for all workers
 image = modal.Image.debian_slim(python_version="3.11").pip_install(
     "fastapi",
     "uvicorn",
@@ -25,14 +26,69 @@ image = modal.Image.debian_slim(python_version="3.11").pip_install(
     "python-dotenv",
 )
 
+# Modal secrets for DB/config (create via scripts/create_modal_secrets.sh)
+_secrets = [
+    modal.Secret.from_name(f"supabase-credentials-{_env}"),
+    modal.Secret.from_name(f"app-config-{_env}"),
+]
+
 
 @app.function(
     image=image,
     timeout=300,
-    secrets=[],  # Will use modal.Secret.from_name("supabase-credentials-develop") etc.
+    secrets=_secrets,
 )
 async def process_sample_job(job_id: str, job_type: str, user_id: str, job_parameters: dict) -> None:
     """Process sample_task job."""
+    await _process_job(job_id, job_type, user_id, job_parameters)
+
+
+# Tiered workers (stubs for future job types per modal-jobs.md)
+@app.function(
+    image=image,
+    timeout=900,  # 15 min
+    cpu=4,
+    memory=8192,  # 8GB
+    secrets=_secrets,
+)
+async def process_gpu_job(job_id: str, job_type: str, user_id: str, job_parameters: dict) -> None:
+    """Process GPU-tier jobs (e.g. document_index)."""
+    await _process_job(job_id, job_type, user_id, job_parameters)
+
+
+@app.function(
+    image=image,
+    timeout=300,  # 5 min
+    cpu=2,
+    memory=2048,  # 2GB
+    secrets=_secrets,
+)
+async def process_browser_job(job_id: str, job_type: str, user_id: str, job_parameters: dict) -> None:
+    """Process browser-tier jobs (e.g. web_crawl)."""
+    await _process_job(job_id, job_type, user_id, job_parameters)
+
+
+@app.function(
+    image=image,
+    timeout=300,  # 5 min
+    cpu=1,
+    memory=1024,  # 1GB
+    secrets=_secrets,
+)
+async def process_llm_job(job_id: str, job_type: str, user_id: str, job_parameters: dict) -> None:
+    """Process LLM-tier jobs (e.g. document_process, llm_task)."""
+    await _process_job(job_id, job_type, user_id, job_parameters)
+
+
+@app.function(
+    image=image,
+    timeout=120,  # 2 min
+    cpu=0.5,
+    memory=512,
+    secrets=_secrets,
+)
+async def process_api_job(job_id: str, job_type: str, user_id: str, job_parameters: dict) -> None:
+    """Process API-tier jobs (e.g. company_enrich)."""
     await _process_job(job_id, job_type, user_id, job_parameters)
 
 
@@ -40,7 +96,7 @@ async def process_sample_job(job_id: str, job_type: str, user_id: str, job_param
     image=image,
     timeout=300,
     schedule=modal.Period(minutes=15),
-    secrets=[],
+    secrets=_secrets,
 )
 async def recover_orphaned_jobs() -> None:
     """Scheduled recovery: mark stuck and orphaned jobs as failed."""

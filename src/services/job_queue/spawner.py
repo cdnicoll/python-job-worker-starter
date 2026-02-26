@@ -14,7 +14,7 @@ async def spawn_job(job_id: str, job_type: str, user_id: str, job_parameters: di
     """Spawn job to Modal worker."""
     func_name = JOB_TIER_MAPPING.get(job_type, "process_sample_job")
     settings = load_settings()
-    app_name = f"Job-Worker-{settings.environment.capitalize()}"
+    app_name = f"Job-Worker-{settings.environment}"
 
     try:
         func = modal.Function.from_name(app_name, func_name)

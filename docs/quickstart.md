@@ -77,7 +77,13 @@ API: `http://localhost:8000`
 uv run deploy_dev   # or deploy_prod
 ```
 
-Requires `modal setup`, `MODAL_PROJECT` in .env, and secrets configured (`scripts/create_modal_secrets.sh`).
+Requires `modal setup`, `MODAL_PROJECT` in .env, and Modal secrets. Create secrets before first deploy:
+
+```bash
+source .env   # or export vars
+./scripts/create_modal_secrets.sh   # prints exact commands
+# Then run the printed modal secret create commands
+```
 
 ---
 
